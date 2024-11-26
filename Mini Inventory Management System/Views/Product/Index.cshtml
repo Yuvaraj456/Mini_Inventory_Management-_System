@@ -1,0 +1,131 @@
+﻿@using System.Globalization
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Home";
+    string? currentSearchBy = ViewData["CurrentSearchBy"]?.ToString();
+    string? currentSearchString = ViewData["CurrentSearchString"]?.ToString();
+}
+<div class="container">
+ <form asp-controller="Product" asp-action="Index" method="get">
+       <h1>Products</h1>
+        <div style="display:flex;">
+        <label>Search By:</label>
+            <select class="form-select form-select-sm w-25 ms-2" name="searchBy" >
+            @foreach (var item in ViewBag.Search)
+            {
+                @if (item.Key == currentSearchBy)
+                {
+                    <option value="@item.Key" selected="selected">@item.Value</option>
+                }
+                else
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+
+            }
+        </select>
+            <label class="ms-2">Search Text:</label>
+            <input type="search" id="searchString" name="searchString" class="form-control form-control-sm w-25 ms-2" placeholder="Search..." value="@currentSearchString" />
+
+            <button type="submit" class="btn btn-success btn-sm ms-2">Search</button>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-danger btn-sm ms-2">Clear All</a>
+
+        </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @if (ViewData["currentSortBy"]?.ToString() == "Id" && ViewData["currentSortOrder"]?.ToString() == "asc")
+                {
+                       <a asp-action="Index" asp-route-sortBy="Id" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Id</a>
+                    <i class="fa-solid fa-sort-up "></i>
+                }
+                else if (ViewData["currentSortBy"]?.ToString() == "Id" && ViewData["currentSortOrder"]?.ToString() == "desc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Id" asp-route-sortOrder="asc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Id</a>
+                    <i class="fa-solid fa-sort-down"></i>
+                }
+                else
+                {
+                            <a asp-action="Index" asp-route-sortBy="Id" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Id</a>
+                    <i class="fa-solid fa-sort"></i>
+                }
+
+            </th>
+            <th>
+                @if (ViewData["currentSortBy"]?.ToString() == "Name" && ViewData["currentSortOrder"]?.ToString() == "asc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Name</a>
+                    <i class="fa-solid fa-sort-up "></i>
+                }
+                else if (ViewData["currentSortBy"]?.ToString() == "Name" && ViewData["currentSortOrder"]?.ToString() == "desc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="asc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Name</a>
+                    <i class="fa-solid fa-sort-down"></i>
+                }
+                else
+                {
+                            <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Name</a>
+                    <i class="fa-solid fa-sort"></i>
+                }
+            </th>
+            <th>
+                @if (ViewData["currentSortBy"]?.ToString() == "Price" && ViewData["currentSortOrder"]?.ToString() == "asc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Price" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Price</a>
+                    <i class="fa-solid fa-sort-up "></i>
+                }
+                else if (ViewData["currentSortBy"]?.ToString() == "Price" && ViewData["currentSortOrder"]?.ToString() == "desc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Price" asp-route-sortOrder="asc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Price</a>
+                    <i class="fa-solid fa-sort-down"></i>
+                }
+                else
+                {
+                            <a asp-action="Index" asp-route-sortBy="Price" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Price</a>
+                    <i class="fa-solid fa-sort"></i>
+                }
+            </th>
+            <th>
+                @if (ViewData["currentSortBy"]?.ToString() == "Stock" && ViewData["currentSortOrder"]?.ToString() == "asc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Stock" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Price</a>
+                    <i class="fa-solid fa-sort-up "></i>
+                }
+                else if (ViewData["currentSortBy"]?.ToString() == "Stock" && ViewData["currentSortOrder"]?.ToString() == "desc")
+                {
+                            <a asp-action="Index" asp-route-sortBy="Stock" asp-route-sortOrder="asc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Stock</a>
+                    <i class="fa-solid fa-sort-down"></i>
+                }
+                else
+                {
+                            <a asp-action="Index" asp-route-sortBy="Stock" asp-route-sortOrder="desc" asp-route-searchBy="@currentSearchBy" asp-route-searchString="@currentSearchString">Stock</a>
+                    <i class="fa-solid fa-sort"></i>
+                }
+            </th>
+            <th>Actions</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                        <td>@String.Format(new CultureInfo("en-IN"), "{0:C2}", @product.Price)</td>
+                <td>@product.Stock</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@product.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@product.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create">Create New Product</a>
+</form>
+
+</div>
